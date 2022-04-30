@@ -53,11 +53,11 @@ friend ostream& operator << (ostream& os, const bitmap& b);
 
 ​	The performance of 500,000 AND operations, XOR operations, and SET operations is as follows.
 
-![img](file:///D:\QQ\834946595\Image\C2C\Image1\NQ1DH[KIJAAZE457B(}W)EX.png)
+![img](D:\LearningFiles\GitHubRepos\Repos\bitset\3.png)
 
 ​	But there is still a shortcoming in the shift operation, the efficiency is lower than the STL standard library. I guess this is because of the different implementation methods. Each shift will take more time to traverse all the positions. If someone has a better implementation method, **PR** is also welcome.
 
-![img](file:///D:\QQ\834946595\Image\C2C\Image1\9K~BP60(FN3`_{RF@)00ALY.png)
+![img](D:\LearningFiles\GitHubRepos\Repos\bitset\1.png)
 
-![img](file:///D:\QQ\834946595\Image\C2C\Image1\BTX}S3I9YMH]~PXOU}2PZWJ.png)
+![img](D:\LearningFiles\GitHubRepos\Repos\bitset\2.png)
 
