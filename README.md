@@ -1,5 +1,7 @@
 # bitset
 
+![image](https://img.shields.io/badge/my-bitset-blue.svg)
+
  A simple bitset implemented in c++.
 
 ## motivation:
