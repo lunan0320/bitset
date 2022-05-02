@@ -2,11 +2,12 @@
 #include <cstdio>
 #include <malloc.h>
 #include <cassert>
-
+#include <bitset>
 using namespace std;
 
 typedef unsigned long u_long;
 typedef unsigned int u_int;
+typedef unsigned long long u_ll;
 
 u_long const type_size = 8 * sizeof(u_long);
 
@@ -15,6 +16,7 @@ public:
     //构造函数和析构函数
     bitmap();
     bitmap(u_int length);
+    bitmap(u_int length, u_ll init);            //构造函数，length是比特长度，init是初始赋值
    
     //辅助函数
     //移位使用，从begin 到 end 左移
@@ -29,7 +31,9 @@ public:
     void reset();                             //设置全部位为0
     void reset(u_long index);                 //设置index位为0
     bool test(u_long index)const;             //判断index位为0或者1，0的时候返回false
-
+    u_long to_u_long()const;                  //将bitmap转换为u_long的数据
+    bitset<32>& to_32bitset()const;           //将bitmap转换为bitset
+    
 
     //运算符重载
     bitmap& operator&=(const bitmap& b);      //两个比特串相与，赋给左值
@@ -78,6 +82,28 @@ bitmap::bitmap(u_int length) {
         return;
     }
     memset(buf, 0, buf_size/8);
+}
+
+bitmap::bitmap(u_int length, u_ll init) {
+    u_int temp = 0;
+    if ((temp = length % type_size) != 0) {
+        //不是type_size的整数倍的时候就补齐
+        buf_size = length + type_size - temp;
+    }
+    else {
+        buf_size = length;
+    }
+    //开辟空间
+    buf = new u_long[buf_size / type_size];
+    if (buf == NULL) {
+        return;
+    }
+    memset(buf, 0, buf_size / 8);
+    for (u_int i = 0; i < length; i++) {
+        if ((init >> i) & 1) {
+            set(i);
+        }
+    }
 }
 
 
@@ -148,6 +174,7 @@ void bitmap::reset(u_long index) {
     *location = *location & ~(0x1 << sub_index);
 }
 
+
 //判断这个bit是0或者1
 bool bitmap::test(const u_long index)const {
     if (index >= buf_size) {
@@ -161,6 +188,32 @@ bool bitmap::test(const u_long index)const {
         return false; 
     }
 }
+
+//转换为u_long
+u_long bitmap::to_u_long() const{
+    u_long res = 0;
+    for (u_int i = 0; i < buf_size; i++) {
+        if (test(i)) {
+            res += 1 << i;
+        }
+    }
+    return res;
+}
+
+
+//将bitmap转换为bitset
+bitset<32>& bitmap::to_32bitset()const {
+    bitset<32> res;
+    res.reset();
+    for (u_int i = 0; i < 32; i++) {
+        if (test(i)) {
+            res.set(i);
+        }
+    }
+    return res;
+}
+
+
 
 //操作符[]重载
 bool bitmap::operator[](u_long index)const {
